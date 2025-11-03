@@ -1,82 +1,57 @@
-# Lightweight React Template for KAVIA
+# Device Inventory Frontend
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+This React app provides UI for managing devices via a REST API.
 
-## Features
+Features
+- List, add, edit, and delete devices
+- Client-side validation including basic IPv4/IPv6 format check
+- Accessible and responsive UI (labels, ARIA, keyboard navigable)
+- Clear error and loading states
+- Environment variable controls the backend base URL
 
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
-- **Fast**: Minimal dependencies for quick loading times
-- **Simple**: Easy to understand and modify
+Quick Start
+1) Install dependencies:
+   npm install
 
-## Getting Started
+2) Configure environment:
+   - Copy `.env.example` to `.env`
+   - Set REACT_APP_API_BASE_URL to your backend (default http://localhost:5000)
 
-In the project directory, you can run:
+3) Run the app:
+   npm start
+   Open http://localhost:3000
 
-### `npm start`
+Environment Variables
+- REACT_APP_API_BASE_URL: Backend API base URL. Example: http://localhost:5000
 
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+API Endpoints (expected)
+- GET    /devices
+- POST   /devices
+- GET    /devices/{name}
+- PUT    /devices/{name}
+- DELETE /devices/{name}
 
-### `npm test`
+Routing
+- /devices            -> list and create
+- /devices/:name      -> edit existing
 
-Launches the test runner in interactive watch mode.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-## Customization
-
-### Colors
-
-The main brand colors are defined as CSS variables in `src/App.css`:
-
-```css
-:root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
+```text
+src/
+  api/
+    client.js       # fetch wrapper using env base URL
+    devices.js      # CRUD API methods
+  components/
+    DeviceForm.jsx  # Form with validation
+    DeviceList.jsx  # Table with actions
+  pages/
+    DevicesPage.jsx       # List + create
+    DeviceDetailPage.jsx  # Edit
+  router.jsx
+  index.js
+  App.js
+  styles.css
 ```
 
-### Components
-
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
-
-Common components include:
-- Buttons (`.btn`, `.btn-large`)
-- Container (`.container`)
-- Navigation (`.navbar`)
-- Typography (`.title`, `.subtitle`, `.description`)
-
-## Learn More
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Notes
+- If the backend is not running, actions will show error messages based on response or network failure.
+- This project uses Create React App (CRA).
