@@ -3,28 +3,48 @@
 // PUBLIC_INTERFACE
 // Simple API client using fetch. Base URL is read from environment variables.
 //
-// We intentionally read a non-CRA-prefixed env var: process.env.backend_api_base_url.
+// We intentionally read non-CRA-prefixed env vars: process.env.BACKEND_API_BASE_URL and process.env.backend_api_base_url.
 // This project assumes the build tool (react-scripts or surrounding pipeline) performs
 // string replacement for process.env.<KEY> at build time. If it does not, ensure
-// backend_api_base_url is injected during build (e.g., via dotenv + DefinePlugin).
+// BACKEND_API_BASE_URL (preferred) or backend_api_base_url is injected during build (e.g., via dotenv + DefinePlugin).
 //
-// We provide additional fallbacks (Vite import.meta.env and window.__ENV__) and emit a console
-// warning when nothing is configured to help diagnose misconfigurations.
+// We provide additional fallbacks (Vite import.meta.env for VITE_BACKEND_API_BASE_URL and VITE_backend_api_base_url,
+// and window.__ENV__) and emit a console warning when nothing is configured to help diagnose misconfigurations.
 const resolveBaseUrl = () => {
-  // Primary: exact key requested
-  const direct = process.env.backend_api_base_url;
+  // Preferred and aliases in order of precedence:
+  const fromNodeEnvUpper = typeof process !== 'undefined' ? process.env.BACKEND_API_BASE_URL : undefined;
+  const fromNodeEnvLower = typeof process !== 'undefined' ? process.env.backend_api_base_url : undefined;
 
-  // Optional fallbacks for other setups
-  const vite = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) || undefined;
-  const win = (typeof window !== 'undefined' && window.__ENV__ && window.__ENV__.backend_api_base_url) || undefined;
+  // Optional fallbacks for other setups (Vite)
+  // Note: we check both uppercase and lowercase Vite keys to support prior conventions.
+  const fromViteUpper =
+    (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_BACKEND_API_BASE_URL) || undefined;
+  const fromViteLower =
+    (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_backend_api_base_url) || undefined;
 
-  const value = direct || vite || win || '';
+  // Runtime injection via global window.__ENV__
+  const fromWindowUpper =
+    (typeof window !== 'undefined' && window.__ENV__ && window.__ENV__.BACKEND_API_BASE_URL) || undefined;
+  const fromWindowLower =
+    (typeof window !== 'undefined' && window.__ENV__ && window.__ENV__.backend_api_base_url) || undefined;
+
+  const value =
+    fromNodeEnvUpper ||
+    fromNodeEnvLower ||
+    fromViteUpper ||
+    fromViteLower ||
+    fromWindowUpper ||
+    fromWindowLower ||
+    '';
 
   if (!value) {
     // eslint-disable-next-line no-console
     console.warn(
-      '[config] backend_api_base_url is not set. ' +
-      'Set process.env.backend_api_base_url at build time or expose window.__ENV__.backend_api_base_url.'
+      '[config] BACKEND_API_BASE_URL/backend_api_base_url is not set. ' +
+        'Configure one of the following (in precedence order): ' +
+        'process.env.BACKEND_API_BASE_URL, process.env.backend_api_base_url, ' +
+        'import.meta.env.VITE_BACKEND_API_BASE_URL, import.meta.env.VITE_backend_api_base_url, ' +
+        'window.__ENV__.BACKEND_API_BASE_URL, window.__ENV__.backend_api_base_url.'
     );
   }
 

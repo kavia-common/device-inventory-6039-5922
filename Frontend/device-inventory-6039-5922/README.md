@@ -19,7 +19,8 @@ Getting Started (Frontend)
 
 2) Configure environment:
    - Copy .env.example to .env and set:
-     backend_api_base_url=http://localhost:5000
+     BACKEND_API_BASE_URL=http://localhost:5000
+   - Lowercase backend_api_base_url is also supported for backward compatibility.
    - This value must point to the backend base URL exposing:
      GET  /devices
      POST /devices
@@ -32,12 +33,19 @@ Getting Started (Frontend)
    Open http://localhost:3000
 
 Environment Variables
-- backend_api_base_url: The base URL of the backend API. Example: http://localhost:5000
+- BACKEND_API_BASE_URL (recommended): The base URL of the backend API. Example: http://localhost:5000
+- backend_api_base_url (backward compatible): Same meaning as above.
 
 Configuration (Important)
-- backend_api_base_url is the single source of truth for the backend base URL and must be provided by your build environment.
+- The frontend resolves the base URL using this precedence:
+  1) process.env.BACKEND_API_BASE_URL
+  2) process.env.backend_api_base_url
+  3) import.meta.env.VITE_BACKEND_API_BASE_URL
+  4) import.meta.env.VITE_backend_api_base_url
+  5) window.__ENV__.BACKEND_API_BASE_URL
+  6) window.__ENV__.backend_api_base_url
 - Legacy variables such as REACT_APP_BASE_URL or REACT_APP_API_BASE_URL are not supported and should not be used.
-- The frontend reads process.env.backend_api_base_url at build time. Ensure your environment injects this variable or expose window.__ENV__.backend_api_base_url for runtime overrides.
+- Ensure your environment injects one of the supported variables (recommended: BACKEND_API_BASE_URL). For runtime overrides, you can expose window.__ENV__.BACKEND_API_BASE_URL (or lowercase variant).
 
 API Endpoints (from OpenAPI)
 - GET  /devices                    -> List devices
