@@ -10,42 +10,23 @@ Frontend highlights:
 - Client-side validation including IPv4/IPv6 format sanity check
 - Accessible forms and buttons with ARIA attributes
 - Responsive, keyboard navigable UI
-- Configurable backend base URL via environment variable
+- Backend base URL is hardcoded in the source for simplicity
 
 Getting Started (Frontend)
 1) Install dependencies:
    cd device-inventory-6039-5922/Frontend
    npm install
 
-2) Configure environment:
-   - Copy .env.example to .env and set:
-     BACKEND_API_BASE_URL=http://localhost:5000
-   - Lowercase backend_api_base_url is also supported for backward compatibility.
-   - This value must point to the backend base URL exposing:
-     GET  /devices
-     POST /devices
-     GET  /devices/{name}
-     PUT  /devices/{name}
-     DELETE /devices/{name}
+2) Configure backend base URL:
+   - Open device-inventory-6039-5922/Frontend/src/api/client.js
+   - Set BACKEND_API_BASE_URL to your backend address (default "http://localhost:5000").
 
 3) Run:
    npm start
    Open http://localhost:3000
 
 Environment Variables
-- BACKEND_API_BASE_URL (recommended): The base URL of the backend API. Example: http://localhost:5000
-- backend_api_base_url (backward compatible): Same meaning as above.
-
-Configuration (Important)
-- The frontend resolves the base URL using this precedence:
-  1) process.env.BACKEND_API_BASE_URL
-  2) process.env.backend_api_base_url
-  3) import.meta.env.VITE_BACKEND_API_BASE_URL
-  4) import.meta.env.VITE_backend_api_base_url
-  5) window.__ENV__.BACKEND_API_BASE_URL
-  6) window.__ENV__.backend_api_base_url
-- Legacy variables such as REACT_APP_BASE_URL or REACT_APP_API_BASE_URL are not supported and should not be used.
-- Ensure your environment injects one of the supported variables (recommended: BACKEND_API_BASE_URL). For runtime overrides, you can expose window.__ENV__.BACKEND_API_BASE_URL (or lowercase variant).
+- Not used for the backend API base URL. Do not add REACT_APP_* for this purpose.
 
 API Endpoints (from OpenAPI)
 - GET  /devices                    -> List devices
@@ -61,5 +42,4 @@ Device Schema
 - location: string
 
 Notes
-- If the backend is not yet available, the frontend will display error messages from failed fetch calls based on the configured base URL.
-
+- If the backend is not yet available or the URL is incorrect, the frontend will display error messages from failed fetch calls.

@@ -1,4 +1,4 @@
-import { apiFetch, API_BASE_URL } from './client';
+import { apiFetch, API_BASE_URL, BACKEND_API_BASE_URL } from './client';
 
 // PUBLIC_INTERFACE
 export async function listDevices() {
@@ -43,3 +43,6 @@ export async function deleteDevice(name) {
   }
   return true;
 }
+
+// PUBLIC_INTERFACE
+export { BACKEND_API_BASE_URL };

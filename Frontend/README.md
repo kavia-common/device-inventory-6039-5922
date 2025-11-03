@@ -7,35 +7,22 @@ Features
 - Client-side validation including basic IPv4/IPv6 format check
 - Accessible and responsive UI (labels, ARIA, keyboard navigable)
 - Clear error and loading states
-- Environment variable controls the backend base URL
+- Backend API base URL is hardcoded in the source for simplicity
 
 Quick Start
 1) Install dependencies:
    npm install
 
-2) Configure environment:
-   - Copy `.env.example` to `.env`
-   - Set BACKEND_API_BASE_URL to your backend (default http://localhost:5000)
-   - Lowercase backend_api_base_url is also supported for backward compatibility.
+2) Configure backend base URL:
+   - Open src/api/client.js
+   - Change the value of BACKEND_API_BASE_URL (default "http://localhost:5000") to match your backend environment.
 
 3) Run the app:
    npm start
    Open http://localhost:3000
 
 Environment Variables
-- BACKEND_API_BASE_URL (recommended): Backend API base URL. Example: http://localhost:5000
-- backend_api_base_url (backward compatible): Same as above, supported for legacy setups.
-
-Build-time and runtime notes
-- The app resolves the base URL using this precedence:
-  1) process.env.BACKEND_API_BASE_URL
-  2) process.env.backend_api_base_url
-  3) import.meta.env.VITE_BACKEND_API_BASE_URL
-  4) import.meta.env.VITE_backend_api_base_url
-  5) window.__ENV__.BACKEND_API_BASE_URL
-  6) window.__ENV__.backend_api_base_url
-- Ensure your build environment injects one of the above (recommended: BACKEND_API_BASE_URL via .env or CI variables).
-- For client-side runtime injection, you can expose window.__ENV__.BACKEND_API_BASE_URL (or the lowercase variant) as a fallback.
+- Not used for the backend API base URL. Do not set REACT_APP_* or other env vars for this purpose.
 
 API Endpoints (expected)
 - GET    /devices
@@ -51,7 +38,7 @@ Routing
 ```text
 src/
   api/
-    client.js       # fetch wrapper using env base URL
+    client.js       # fetch wrapper using a hardcoded BACKEND_API_BASE_URL
     devices.js      # CRUD API methods
   components/
     DeviceForm.jsx  # Form with validation
@@ -66,9 +53,8 @@ src/
 ```
 
 Notes
-- If the backend is not running, actions will show error messages based on response or network failure.
+- If the backend is not running or the URL is incorrect, actions will show error messages based on response or network failure.
 
 Configuration (Important)
-- BACKEND_API_BASE_URL is the canonical variable for the backend base URL.
-- Lowercase backend_api_base_url remains supported for backward compatibility.
-- Legacy variables such as REACT_APP_BASE_URL or REACT_APP_API_BASE_URL are not supported and should not be used anywhere in your configuration or code.
+- The backend base URL is now hardcoded. Change it in src/api/client.js by editing BACKEND_API_BASE_URL.
+- Do not reintroduce environment variables such as REACT_APP_* for the API base URL.
