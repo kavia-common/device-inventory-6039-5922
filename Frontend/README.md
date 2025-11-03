@@ -57,4 +57,9 @@ src/
 
 Notes
 - If the backend is not running, actions will show error messages based on response or network failure.
-- This project uses Create React App (CRA). CRA typically exposes only REACT_APP_* keys to the browser; however, this project expects backend_api_base_url and assumes your build tooling replaces process.env.backend_api_base_url at build time. If your setup differs, configure appropriate env injection.
+
+Configuration (Important)
+- backend_api_base_url is the single source of truth for the backend base URL.
+- The app reads process.env.backend_api_base_url at build time. Ensure your build environment injects this variable (e.g., via a .env file or CI/CD environment variables).
+- For setups using client-side runtime injection, you can also expose window.__ENV__.backend_api_base_url as a fallback.
+- Legacy variables such as REACT_APP_BASE_URL or REACT_APP_API_BASE_URL are not supported and should not be used anywhere in your configuration or code.

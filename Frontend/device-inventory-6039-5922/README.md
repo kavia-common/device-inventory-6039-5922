@@ -34,7 +34,9 @@ Getting Started (Frontend)
 Environment Variables
 - backend_api_base_url: The base URL of the backend API. Example: http://localhost:5000
 
-Build-time note
+Configuration (Important)
+- backend_api_base_url is the single source of truth for the backend base URL and must be provided by your build environment.
+- Legacy variables such as REACT_APP_BASE_URL or REACT_APP_API_BASE_URL are not supported and should not be used.
 - The frontend reads process.env.backend_api_base_url at build time. Ensure your environment injects this variable or expose window.__ENV__.backend_api_base_url for runtime overrides.
 
 API Endpoints (from OpenAPI)
