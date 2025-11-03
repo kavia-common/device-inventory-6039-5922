@@ -1,4 +1,4 @@
-import { apiFetch } from './client';
+import { apiFetch, API_BASE_URL } from './client';
 
 // PUBLIC_INTERFACE
 export async function listDevices() {
@@ -26,10 +26,9 @@ export async function updateDevice(name, payload) {
 
 // PUBLIC_INTERFACE
 export async function deleteDevice(name) {
-  /** Delete a device by name */
-  // Manually handle 204 with no body
-  const url = `/devices/${encodeURIComponent(name)}`;
-  const res = await fetch(`${process.env.REACT_APP_API_BASE_URL || (import.meta?.env?.VITE_API_BASE_URL || '')}${url}`, {
+  /** Delete a device by name (204 expected, no body) */
+  const url = `${API_BASE_URL}/devices/${encodeURIComponent(name)}`;
+  const res = await fetch(url, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
   });

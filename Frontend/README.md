@@ -15,14 +15,17 @@ Quick Start
 
 2) Configure environment:
    - Copy `.env.example` to `.env`
-   - Set REACT_APP_API_BASE_URL to your backend (default http://localhost:5000)
+   - Set backend_api_base_url to your backend (default http://localhost:5000)
 
 3) Run the app:
    npm start
    Open http://localhost:3000
 
 Environment Variables
-- REACT_APP_API_BASE_URL: Backend API base URL. Example: http://localhost:5000
+- backend_api_base_url: Backend API base URL. Example: http://localhost:5000
+
+Build-time note
+- The app reads process.env.backend_api_base_url at build time. Ensure your build environment injects this variable (e.g., via a .env file or CI/CD environment variables). For setups using client-side runtime injection, you can also expose window.__ENV__.backend_api_base_url as a fallback.
 
 API Endpoints (expected)
 - GET    /devices
@@ -54,4 +57,4 @@ src/
 
 Notes
 - If the backend is not running, actions will show error messages based on response or network failure.
-- This project uses Create React App (CRA).
+- This project uses Create React App (CRA). CRA typically exposes only REACT_APP_* keys to the browser; however, this project expects backend_api_base_url and assumes your build tooling replaces process.env.backend_api_base_url at build time. If your setup differs, configure appropriate env injection.

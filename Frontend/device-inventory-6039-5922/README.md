@@ -19,7 +19,7 @@ Getting Started (Frontend)
 
 2) Configure environment:
    - Copy .env.example to .env and set:
-     REACT_APP_API_BASE_URL=http://localhost:5000
+     backend_api_base_url=http://localhost:5000
    - This value must point to the backend base URL exposing:
      GET  /devices
      POST /devices
@@ -32,7 +32,10 @@ Getting Started (Frontend)
    Open http://localhost:3000
 
 Environment Variables
-- REACT_APP_API_BASE_URL: The base URL of the backend API. Example: http://localhost:5000
+- backend_api_base_url: The base URL of the backend API. Example: http://localhost:5000
+
+Build-time note
+- The frontend reads process.env.backend_api_base_url at build time. Ensure your environment injects this variable or expose window.__ENV__.backend_api_base_url for runtime overrides.
 
 API Endpoints (from OpenAPI)
 - GET  /devices                    -> List devices

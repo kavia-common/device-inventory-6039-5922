@@ -1,16 +1,46 @@
 //
+//
 // PUBLIC_INTERFACE
 // Simple API client using fetch. Base URL is read from environment variables.
 //
-const getEnvBaseUrl = () => {
-  // Prefer CRA variable; fallback to Vite style if present
-  const cra = process.env.REACT_APP_API_BASE_URL;
-  const vite = typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL;
-  return cra || vite || '';
+// We intentionally read a non-CRA-prefixed env var: process.env.backend_api_base_url.
+// Note: In Create React App (CRA), only REACT_APP_* variables are automatically exposed
+// to the client bundle. This project assumes the build tool (react-scripts or surrounding
+// pipeline) performs string replacement for process.env.<KEY> at build time. If it does not,
+// you must ensure backend_api_base_url is injected during build (e.g., via dotenv + DefinePlugin).
+//
+// We provide additional fallbacks (Vite import.meta.env and window.__ENV__) and emit a console
+// warning when nothing is configured to help diagnose misconfigurations.
+const resolveBaseUrl = () => {
+  // Primary: exact key requested
+  const direct = process.env.backend_api_base_url;
+
+  // Optional fallbacks for other setups
+  const vite = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) || undefined;
+  const win = (typeof window !== 'undefined' && window.__ENV__ && window.__ENV__.backend_api_base_url) || undefined;
+
+  const value = direct || vite || win || '';
+
+  if (!value) {
+    // Help the developer configure the correct variable name.
+    // Also detect if a legacy variable exists to guide migration.
+    const legacyCRA = process.env.REACT_APP_API_BASE_URL;
+    const legacyVite = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) || undefined;
+
+    // eslint-disable-next-line no-console
+    console.warn(
+      '[config] backend_api_base_url is not set. ' +
+      'Set process.env.backend_api_base_url at build time. ' +
+      (legacyCRA ? 'Found REACT_APP_API_BASE_URL, but this app now expects backend_api_base_url.' : '') +
+      (!legacyCRA && legacyVite ? 'Found VITE_API_BASE_URL, but this app now expects backend_api_base_url.' : '')
+    );
+  }
+
+  return value;
 };
 
 // PUBLIC_INTERFACE
-export const API_BASE_URL = getEnvBaseUrl();
+export const API_BASE_URL = resolveBaseUrl();
 
 // PUBLIC_INTERFACE
 export async function apiFetch(path, options = {}) {
