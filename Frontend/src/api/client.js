@@ -6,7 +6,7 @@
 // Example: "http://localhost:5000" (development), "https://api.example.com" (production)
 
 // PUBLIC_INTERFACE
-export const BACKEND_API_BASE_URL = "https://kavia-alb-a792937e-1712154363.backend.kavia.app/"; // Change this for your environment.
+export const BACKEND_API_BASE_URL = "https://kavia-alb-6c187343-611430434.backend.kavia.app/"; // Change this for your environment.
 
 // PUBLIC_INTERFACE
 export const API_BASE_URL = BACKEND_API_BASE_URL;
